@@ -1,0 +1,8 @@
+langchain==0.2.12
+openai==1.38.0
+pinecone-client
+langchain-pinecone
+langchain-openai
+python-dotenv==0.21.0
+pypdf
+Flask==3.0.3
