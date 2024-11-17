@@ -2,6 +2,12 @@
 
 This project implements a personal chatbot, **KnowMeBot**, designed to interact with users and answer questions based on personalized information provided in a document (PDF). The chatbot is deployed as a web service, allowing users to ask questions and receive answers about the developer (Sujith) as if they were interacting with the individual directly.
 
+## Table of Contents
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [How It Works](#how-it-works)
+
+
 ## Features
 
 - **Personalized Responses**: The chatbot provides responses based on the data in a PDF document, imitating the developer's voice.
