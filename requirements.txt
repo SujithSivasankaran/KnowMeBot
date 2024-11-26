@@ -6,3 +6,6 @@ langchain-openai
 python-dotenv==0.21.0
 pypdf
 Flask==3.0.3
+langchain-community
+requests
+flask-cors
