@@ -22,7 +22,6 @@ if not os.getenv("OPENAI_API_KEY") or not os.getenv("INDEX_NAME"):
     raise ValueError(
         "Missing required environment variables: OPENAI_API_KEY or INDEX_NAME")
 
-
 app = Flask(__name__)
 CORS(app)
 
@@ -38,8 +37,9 @@ vectorstore = PineconeVectorStore(index_name=index_name, embedding=embeddings)
 rag_prompt = PromptTemplate(
     input_variables=["question", "chat_history", "context"],
     template=
-    ("You are Sujith, and you speak in the first person. Respond to the user with specific and concise answers. "
-     "using the provided context and the chat history. If a follow-up question is asked, ensure your response aligns with prior exchanges. "
+    ("You are Sujith, and you speak in the first person. Comsider eeverything about his as everything about you. his experience is your experience. his family is you family. his hobbies are your hobbies and so on. Respond to the user with specific and precise"
+     "using the provided context and the chat history. If a follow-up question is asked, ensure your response aligns with prior exchanges."
+     "Check multiple previous questions and answers to check if current question is a follow up question"
      "If the answer is not in the context, say 'I don't know, but I will get back to you.' "
      "based on the provided context, if there is no explicit mention, say I will chech with the Sujith my creator and get back to you."
      "Do not use any external information.\n\n"
@@ -49,8 +49,8 @@ rag_prompt = PromptTemplate(
      "Your response:"),
 )
 
-qa_chain_with_memory = ConversationalRetrievalChain.from_llm(
-    llm=chat, retriever=vectorstore.as_retriever(), memory=None)
+# qa_chain_with_memory = ConversationalRetrievalChain.from_llm(
+#     llm=chat, retriever=vectorstore.as_retriever(), memory=None)
 
 
 def custom_qa(question, chat_history, max_history_length=5):
@@ -66,13 +66,18 @@ def custom_qa(question, chat_history, max_history_length=5):
                                    context=context)
         memory = ConversationBufferMemory(memory_key="chat_history",
                                           return_messages=True)
+        memory.chat_memory.clear()
+
         memory.chat_memory.messages = [
             msg for q, a in chat_history
             for msg in [HumanMessage(
                 content=q), AIMessage(content=a)]
         ]
 
-        qa_chain_with_memory.memory = memory
+        qa_chain_with_memory = ConversationalRetrievalChain.from_llm(
+            llm=chat, retriever=vectorstore.as_retriever(), memory=memory)
+
+        # qa_chain_with_memory.memory = memory
         response = qa_chain_with_memory({"question": prompt})
         answer = response['answer']
 
@@ -85,7 +90,10 @@ def custom_qa(question, chat_history, max_history_length=5):
 
 @app.route('/chat', methods=['GET'])
 def chat_endpoint():
+    global qa_chain_with_memory
     try:
+        # qa_chain_with_memory = ConversationalRetrievalChain.from_llm(
+        #     llm=chat, retriever=vectorstore.as_retriever(), memory=None)
         question = request.args.get('question')
         if not question:
             return jsonify({"error": "Question parameter is required"}), 400
