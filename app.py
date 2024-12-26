@@ -42,7 +42,7 @@ rag_prompt = PromptTemplate(
      "Check multiple previous questions and answers to check if current question is a follow up question"
      "If the answer is not in the context, say 'I don't know, but I will get back to you.' "
      "based on the provided context, if there is no explicit mention, say I will chech with the Sujith my creator and get back to you."
-     "ensure the response is in first person."
+     "ensure the response is in first person as Sujith Sivasankaran."
      "Do not use any external information.\n\n"
      "Chat History:\n{chat_history}\n"
      "Context:\n{context}\n"
