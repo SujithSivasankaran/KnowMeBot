@@ -79,8 +79,6 @@ def custom_qa(question, chat_history, max_history_length=5):
 
         # qa_chain_with_memory.memory = memory
         response = qa_chain_with_memory({"question": prompt})
-        ans = qa_chain_with_memory({"convert to first person if the text is not already in first person": response['answer']})
-        response['answer'] = ans
         answer = response['answer']
 
         return answer
